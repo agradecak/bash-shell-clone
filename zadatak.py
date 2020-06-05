@@ -12,7 +12,7 @@ def ispisi_odziv():
     op_sustav = os.uname()[0]
     korisnik = os.getlogin()
     direktorij = os.getcwd()
-    print('{}@{}:{}$ '.format(op_sustav, korisnik, direktorij))
+    print('{}@{}:{}$ '.format(korisnik, op_sustav, direktorij))
     print('nesto')
     
 ispisi_odziv()
