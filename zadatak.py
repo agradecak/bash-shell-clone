@@ -1,11 +1,12 @@
 #   ___MODULI___
 import os
 import time
+import sys
 
 
 #   ___DEFINICIJE___
 
-#   definicija funkcije ispisa odzivnog znaka
+#   ispisuje odzivni znak
 def ispisi_odziv():
     #   da varijable budu globalne ili in-function defined?
     op_sustav = os.uname()[0]
@@ -13,16 +14,24 @@ def ispisi_odziv():
     direktorij = os.getcwd()
     print('({}::{}){} $ '.format(korisnik, op_sustav, direktorij), end = '')
 
-#   vraca korisnicki unos (string)
-def korisn_unos():
-    unos = input()
-    return unos
+#   provjerava unos naredbi
+def provjeri_unos(lista):
+    #   svi if statements cekaju definicije umjesto pass
+    if lista[0] == 'pwd': pass
+    elif lista[0] == 'ps': pass
+    elif lista[0] == 'echo': pass
+    elif lista[0] == 'kill': pass
+    elif lista[0] == 'cd': pass
+    elif lista[0] == 'ls': pass
+    elif lista[0] == 'touch': pass
+    elif lista[0] == 'rm': pass
+    elif lista[0] == 'kvadrat': pass
+    elif lista[0] == 'izlaz' or lista[0] == 'odjava':
+        sys.exit()
+    else:
+        print('Neprepoznata naredba.')
 
-#   provjerava zavrsetak programa
-def je_izlaz(unos):
-    if unos == 'izlaz' or unos == 'odjava':
-        return 1
-
+""" 
 #   pokusaj naredbi
 def pwd (unos):
     if unos == 'pwd': # ILI REG \pwd$
@@ -43,8 +52,9 @@ def kill (unos):
     if unos == 'kill':  # REG \kill$
         print('Naredba prima tocno jedan parametar: naziv signala ili njegov redni broj')
     if else unos == 'echo -15': # \echo\s\-[0-9]{1,2}|[A-Z]{1,}
-        print('Pristigao je signal 15 . Program se zatvara')
+        print('Pristigao je signal 15 . Program se zatvara') 
 
+"""
 
 
 #   ___MAIN___
@@ -57,8 +67,6 @@ print('Pozdrav! ({})'.format(vrijeme))
 while (True):
     unos = ''
     ispisi_odziv()
-    unos = korisn_unos()
-
-    #   provjera izlaza iz programa
-    if je_izlaz(unos):
-        break
+    unos = input()
+    unos_split = unos.split()
+    provjeri_unos(unos_split)
