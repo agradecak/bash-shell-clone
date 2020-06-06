@@ -16,7 +16,8 @@ def ispisi_odziv():
 
 #   provjerava unos naredbi
 def provjeri_unos(lista):
-    #   svi if statements cekaju definicije umjesto pass
+    #   funkcija radi za prepoznavanje nepoznatih naredbi ali
+    #   if statements cekaju definicije svojih funkcija umjesto placeholdera pass
     if lista[0] == 'pwd': pass
     elif lista[0] == 'ps': pass
     elif lista[0] == 'echo': pass
