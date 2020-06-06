@@ -23,6 +23,29 @@ def je_izlaz(unos):
     if unos == 'izlaz' or unos == 'odjava':
         return 1
 
+#   pokusaj naredbi
+def pwd (unos):
+    if unos == 'pwd': # ILI REG \pwd$
+        print('({}::{}){} $ '.format(korisnik, op_sustav, direktorij), end = '')
+    else
+        print('Naredba neprima ni parametre ni argumente')
+
+def echo (unos):
+    if unos == 'echo':  # REG \echo$
+        print('Naredba prima barem jedan argument')
+    # regularni izraz ???
+    else unos == 'echo' # REG \echo\s([a-z]+\s)|\"([a-z]+\s)"
+        # ispis argumenta bez ""
+        # x=re.search([a-z]+\s)
+        print('x')
+
+def kill (unos):
+    if unos == 'kill':  # REG \kill$
+        print('Naredba prima tocno jedan parametar: naziv signala ili njegov redni broj')
+    if else unos == 'echo -15': # \echo\s\-[0-9]{1,2}|[A-Z]{1,}
+        print('Pristigao je signal 15 . Program se zatvara')
+
+
 
 #   ___MAIN___
 
