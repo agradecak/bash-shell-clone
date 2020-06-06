@@ -1,10 +1,9 @@
-#   import koristenih modula
+#   ___MODULI___
 import os
 import time
 
-#   ispis pozdravne poruke i trenutnog vremena
-vrijeme = time.ctime()
-print('Pozdrav! ({})'.format(vrijeme))
+
+#   ___DEFINICIJE___
 
 #   definicija funkcije ispisa odzivnog znaka
 def ispisi_odziv():
@@ -12,6 +11,31 @@ def ispisi_odziv():
     op_sustav = os.uname()[0]
     korisnik = os.getlogin()
     direktorij = os.getcwd()
-    print('{}@{}:{}$ '.format(korisnik, op_sustav, direktorij))
-    
-ispisi_odziv()
+    print('({}::{}){} $ '.format(korisnik, op_sustav, direktorij), end = '')
+
+#   vraca korisnicki unos (string)
+def korisn_unos():
+    unos = input()
+    return unos
+
+#   provjerava zavrsetak programa
+def je_izlaz(unos):
+    if unos == 'izlaz' or unos == 'odjava':
+        return 1
+
+
+#   ___MAIN___
+
+#   ispis pozdravne poruke i trenutnog vremena
+vrijeme = time.ctime()
+print('Pozdrav! ({})'.format(vrijeme))
+
+#   glavna petlja
+while (True):
+    unos = ''
+    ispisi_odziv()
+    unos = korisn_unos()
+
+    #   provjera izlaza iz programa
+    if je_izlaz(unos):
+        break
