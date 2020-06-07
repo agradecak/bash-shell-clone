@@ -44,6 +44,7 @@ def izvrsi(lista):
     elif lista[0] == 'echo': echo(lista)
     elif lista[0] == 'kill': kill(lista)
     elif lista[0] == 'cd': cd(lista)
+    elif lista[0] == 'date': date(lista)
     elif lista[0] == 'ls': pass
     elif lista[0] == 'touch': pass
     elif lista[0] == 'rm': pass
@@ -85,11 +86,14 @@ def kill(lista):
     else:
         signal = int(lista[1].strip('-'))
         os.kill(os.getpid(), signal)
-
+#   mjenja direktorij ovisno o koristenom parametru
 def cd(lista):
+    #   izvrsava se ako nema parametara
     if len(lista) == 1:
         os.chdir(os.path.expanduser('~'))
+    #   izvrsava se ako ima jedan parametar
     elif len(lista) == 2:
+        #   slice prva dva karaktera u parametru, za provjeru sta se koristi
         param = lista[1][0:2]
         if param == '.':
             pass
@@ -110,8 +114,17 @@ def cd(lista):
                 print('Direktorij ne postoji.')
         else:
             print('Nepostojeci parametar.')
+    #   izvrsava se ako ima previse parametara
     else:
         print('Dopusten je unos samo jednog parametra.')
+
+def date(lista):
+    if len(lista) == 1:
+        print(time.strftime("%H<>%M<>%S %A %d./%m./%Y", time.localtime()))
+    elif len(lista) == 2 and lista[1] == '-w':
+        print(time.strftime("%H<>%M<>%S %a %d./%m./%Y", time.localtime()))
+    else:
+        print("Naredba prima najvise jedan parametar (-w).")
 
 """ 
 #   pokusaj naredbi
@@ -147,7 +160,7 @@ while (True):
     ispisi_odziv()
     unos = input()
     unos_split = unos.split()
-    #   ako je lista prazna, nastavi nastavi
+    #   ako je lista prazna, nastavi (kako se nebi pristupalo indeksima kojih nema)
     if not unos_split:
         continue
     #   ako lista nije prazna, provjeri za i izvrsi naredbu
