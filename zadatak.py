@@ -18,7 +18,7 @@ def ispisi_odziv():
 def provjeri_unos(lista):
     #   funkcija radi za prepoznavanje nepoznatih naredbi ali
     #   if statements cekaju definicije svojih funkcija umjesto placeholdera pass
-    if lista[0] == 'pwd': pass
+    if lista[0] == 'pwd': pwd(lista)
     elif lista[0] == 'ps': pass
     elif lista[0] == 'echo': pass
     elif lista[0] == 'kill': pass
@@ -32,13 +32,15 @@ def provjeri_unos(lista):
     else:
         print('Neprepoznata naredba.')
 
+def pwd (lista):
+    if len(lista) == 1:
+        print(os.getcwd())
+    else:
+        print('Naredba ne prima parametre ni argumente.')
+
 """ 
 #   pokusaj naredbi
-def pwd (unos):
-    if unos == 'pwd': # ILI REG \pwd$
-        print('({}::{}){} $ '.format(korisnik, op_sustav, direktorij), end = '')
-    else
-        print('Naredba neprima ni parametre ni argumente')
+
 
 def echo (unos):
     if unos == 'echo':  # REG \echo$
