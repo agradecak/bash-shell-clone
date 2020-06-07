@@ -37,7 +37,11 @@ def pwd (lista):
         print(os.getcwd())
     else:
         print('Naredba ne prima parametre ni argumente.')
-
+def ps (lista):
+    if len(lista) == 1:
+	print(os.getpid())
+    else:
+	print('Ne postojeci parametar ili argument.')
 """ 
 #   pokusaj naredbi
 
@@ -73,3 +77,17 @@ while (True):
     unos = input()
     unos_split = unos.split()
     provjeri_unos(unos_split)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
