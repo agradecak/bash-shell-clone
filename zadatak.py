@@ -74,6 +74,7 @@ def echo(lista):
     else:
         for dat in lista[1:]:
             dat = dat.replace('"', '')
+            dat = dat.replace("'", '')
             print(dat, end=' ')
         print('')
 
