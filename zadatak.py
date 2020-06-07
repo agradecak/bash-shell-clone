@@ -20,7 +20,7 @@ def provjeri_unos(lista):
     #   if statements cekaju definicije svojih funkcija umjesto placeholdera pass
     if lista[0] == 'pwd': pwd(lista)
     elif lista[0] == 'ps': ps(lista)
-    elif lista[0] == 'echo': pass
+    elif lista[0] == 'echo': echo(lista)
     elif lista[0] == 'kill': pass
     elif lista[0] == 'cd': pass
     elif lista[0] == 'ls': pass
@@ -42,6 +42,14 @@ def ps (lista):
 	    print(os.getpid())
     else:
 	    print('Ne postojeci parametar ili argument.')
+def echo (lista):
+    if len(lista) == 1:
+        print("Naredba prima barem jedan argument")
+    else:
+        for dat in lista[1:]:
+            dat = dat.replace('"', '')
+            print(dat, end=' ')
+        print('\n')
 """ 
 #   pokusaj naredbi
 
