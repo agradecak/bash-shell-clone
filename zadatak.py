@@ -19,7 +19,7 @@ def provjeri_unos(lista):
     #   funkcija radi za prepoznavanje nepoznatih naredbi ali
     #   if statements cekaju definicije svojih funkcija umjesto placeholdera pass
     if lista[0] == 'pwd': pwd(lista)
-    elif lista[0] == 'ps': pass
+    elif lista[0] == 'ps': ps(lista)
     elif lista[0] == 'echo': pass
     elif lista[0] == 'kill': pass
     elif lista[0] == 'cd': pass
@@ -39,9 +39,9 @@ def pwd (lista):
         print('Naredba ne prima parametre ni argumente.')
 def ps (lista):
     if len(lista) == 1:
-	print(os.getpid())
+	    print(os.getpid())
     else:
-	print('Ne postojeci parametar ili argument.')
+	    print('Ne postojeci parametar ili argument.')
 """ 
 #   pokusaj naredbi
 
