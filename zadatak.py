@@ -4,6 +4,7 @@ import os
 import time
 import sys
 import signal
+import re
 
 #   ________________________________________________________________________________
 #   SIGNALI
@@ -42,7 +43,7 @@ def izvrsi(lista):
     elif lista[0] == 'ps': ps(lista)
     elif lista[0] == 'echo': echo(lista)
     elif lista[0] == 'kill': kill(lista)
-    elif lista[0] == 'cd': pass
+    elif lista[0] == 'cd': cd(lista)
     elif lista[0] == 'ls': pass
     elif lista[0] == 'touch': pass
     elif lista[0] == 'rm': pass
@@ -84,6 +85,33 @@ def kill(lista):
         signal = int(lista[1].strip('-'))
         os.kill(os.getpid(), signal)
 
+def cd(lista):
+    if len(lista) == 1:
+        os.chdir(os.path.expanduser('~'))
+    elif len(lista) == 2:
+        param = lista[1][0:2]
+        if param == '.':
+            pass
+        elif param == '..':
+            roditelj = os.path.join(os.getcwd(), os.pardir)
+            os.chdir(roditelj)
+        elif param == './':
+            try:
+                odrediste = lista[1].strip('./')
+                dublje = os.path.join(os.getcwd(), odrediste)
+                os.chdir(dublje)
+            except:
+                print('Direktorij ne postoji.')
+        elif lista[1][0:1] == '/':
+            try:
+                os.chdir(lista[1])
+            except:
+                print('Direktorij ne postoji.')
+        else:
+            print('Nepostojeci parametar.')
+    else:
+        print('Dopusten je unos samo jednog parametra.')
+
 """ 
 #   pokusaj naredbi
 
@@ -118,4 +146,9 @@ while (True):
     ispisi_odziv()
     unos = input()
     unos_split = unos.split()
-    izvrsi(unos_split)
+    #   ako je lista prazna, nastavi nastavi
+    if not unos_split:
+        continue
+    #   ako lista nije prazna, provjeri za i izvrsi naredbu
+    else:
+        izvrsi(unos_split)
