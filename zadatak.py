@@ -1,10 +1,30 @@
-#   ___MODULI___
+#   ________________________________________________________________________________
+#   MODULI
 import os
 import time
 import sys
+import signal
 
+#   ________________________________________________________________________________
+#   SIGNALI
 
-#   ___DEFINICIJE___
+#   ignorira signal 3 i ispisuje obavijest korisniku
+def upravljacQUIT(broj_signala, stog):
+    print('Signal broj 3 je ignoriran.')
+    return
+
+#   ispisuje obavijest i prekida izvodjenje programa
+def upravljacTERM(broj_signala, stog):
+    print('Pristigao je signal broj 15. Program se zavrsava.')
+    sys.exit()
+    return
+
+signal.signal(signal.SIGINT, signal.SIG_DFL)
+signal.signal(signal.SIGQUIT, upravljacQUIT)
+signal.signal(signal.SIGTERM, upravljacTERM)
+
+#   ________________________________________________________________________________
+#   DEFINICIJE
 
 #   ispisuje odzivni znak
 def ispisi_odziv():
@@ -15,13 +35,13 @@ def ispisi_odziv():
     print('({}::{}){} $ '.format(korisnik, op_sustav, direktorij), end = '')
 
 #   provjerava unos naredbi
-def provjeri_unos(lista):
+def izvrsi(lista):
     #   funkcija radi za prepoznavanje nepoznatih naredbi ali
     #   if statements cekaju definicije svojih funkcija umjesto placeholdera pass
     if lista[0] == 'pwd': pwd(lista)
     elif lista[0] == 'ps': ps(lista)
     elif lista[0] == 'echo': echo(lista)
-    elif lista[0] == 'kill': pass
+    elif lista[0] == 'kill': kill(lista)
     elif lista[0] == 'cd': pass
     elif lista[0] == 'ls': pass
     elif lista[0] == 'touch': pass
@@ -32,24 +52,38 @@ def provjeri_unos(lista):
     else:
         print('Neprepoznata naredba.')
 
-def pwd (lista):
+#   ispisuje apsolutnu adresu trenutnog direktorija ili obavjestava o krivom unosu
+def pwd(lista):
     if len(lista) == 1:
         print(os.getcwd())
     else:
         print('Naredba ne prima parametre ni argumente.')
-def ps (lista):
+
+#   ispisuje PID trenutnog procesa ili obavjestava o krivom unosu
+def ps(lista):
     if len(lista) == 1:
 	    print(os.getpid())
     else:
-	    print('Ne postojeci parametar ili argument.')
-def echo (lista):
+	    print('Nepostojeci parametar ili argument.')
+
+#   ispisuje korisnicki string ili obavjestava o krivom unosu
+def echo(lista):
     if len(lista) == 1:
-        print("Naredba prima barem jedan argument")
+        print("Naredba prima barem jedan argument.")
     else:
         for dat in lista[1:]:
             dat = dat.replace('"', '')
             print(dat, end=' ')
-        print('\n')
+        print('')
+
+#   obraduje signal ili obavjestava o krivom unosu
+def kill(lista):
+    if len(lista) == 1:
+        print("Naredba prima tocno jedan parametar: naziv signala ili njegov redni broj.")
+    else:
+        signal = int(lista[1].strip('-'))
+        os.kill(os.getpid(), signal)
+
 """ 
 #   pokusaj naredbi
 
@@ -71,8 +105,8 @@ def kill (unos):
 
 """
 
-
-#   ___MAIN___
+#   ________________________________________________________________________________
+#   MAIN
 
 #   ispis pozdravne poruke i trenutnog vremena
 vrijeme = time.ctime()
@@ -84,18 +118,4 @@ while (True):
     ispisi_odziv()
     unos = input()
     unos_split = unos.split()
-    provjeri_unos(unos_split)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    izvrsi(unos_split)
