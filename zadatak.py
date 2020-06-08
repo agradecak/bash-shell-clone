@@ -45,7 +45,7 @@ def izvrsi(lista):
     elif lista[0] == 'kill': kill(lista)
     elif lista[0] == 'cd': cd(lista)
     elif lista[0] == 'date': date(lista)
-    elif lista[0] == 'ls': pass
+    elif lista[0] == 'ls': ls(lista)
     elif lista[0] == 'touch': pass
     elif lista[0] == 'rm': pass
     elif lista[0] == 'kvadrat': pass
@@ -125,6 +125,48 @@ def date(lista):
         print(time.strftime("%H<>%M<>%S %a %d./%m./%Y", time.localtime()))
     else:
         print("Naredba prima najvise jedan parametar (-w).")
+
+def ls(lista):
+    if len(lista) == 1:
+        sadrzaj = os.scandir()
+        for dat in sadrzaj:
+            #   ako datoteka nije sakrivena (pocinje sa '.'), ispisi podatke
+            if not dat.name[0] == '.':
+                print(dat.name)
+    elif len(lista) == 2 and lista[1] == '-l':
+        sadrzaj = os.scandir()
+        print('{: <20}{: >10}{: >10}{: >10}{: >10}{: >10}'.format('Name', 'Mode' , 'Nlinks', 'UID', 'GID', 'Size'))
+        print('-' * 70)
+        for dat in sadrzaj:
+            if not dat.name[0] == '.':
+                info = dat.stat()
+                print('{: <20}{: >10}{: >10}{: >10}{: >10}{: >10}'.format(dat.name, info.st_mode, info.st_nlink, info.st_uid, info.st_gid, info.st_size))
+    elif len(lista) == 2 and lista[1][0:2] == './':
+        try:
+            odrediste = lista[1].strip('./')
+            dublje = os.path.join(os.getcwd(), odrediste)
+            sadrzaj = os.scandir(dublje)
+            for dat in sadrzaj:
+                #   ako datoteka nije sakrivena (pocinje sa '.'), ispisi podatke
+                if not dat.name[0] == '.':
+                    print(dat.name)
+        except:
+            print('Direktorij ne postoji.')
+    elif len(lista) == 3 and lista[1] == '-l' and lista[2][0:2] == './':
+        try:
+            odrediste = lista[2].strip('./')
+            dublje = os.path.join(os.getcwd(), odrediste)
+            sadrzaj = os.scandir(dublje)
+            print('{: <20}{: >10}{: >10}{: >10}{: >10}{: >10}'.format('Name', 'Mode' , 'Nlinks', 'UID', 'GID', 'Size'))
+            print('-' * 70)
+            for dat in sadrzaj:
+                if not dat.name[0] == '.':
+                    info = dat.stat()
+                    print('{: <20}{: >10}{: >10}{: >10}{: >10}{: >10}'.format(dat.name, info.st_mode, info.st_nlink, info.st_uid, info.st_gid, info.st_size))
+        except:
+            print('Direktorij ne postoji.')
+    else:
+        print('Naredba prima najvise jedan parametar (-l) i jedan argument (rel. adresu).')
 
 """ 
 #   pokusaj naredbi
