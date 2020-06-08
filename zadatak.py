@@ -46,7 +46,7 @@ def izvrsi(lista):
     elif lista[0] == 'cd': cd(lista)
     elif lista[0] == 'date': date(lista)
     elif lista[0] == 'ls': ls(lista)
-    elif lista[0] == 'touch': pass
+    elif lista[0] == 'touch': touch(lista)
     elif lista[0] == 'rm': pass
     elif lista[0] == 'kvadrat': pass
     elif lista[0] == 'izlaz' or lista[0] == 'odjava':
@@ -167,6 +167,16 @@ def ls(lista):
             print('Direktorij ne postoji.')
     else:
         print('Naredba prima najvise jedan parametar (-l) i jedan argument (rel. adresu).')
+
+def touch(lista):
+    put = lista[1]
+    if os.path.isfile(put):
+        print('Datoteka vec postoji.')
+    else:
+        try:
+            open(put, 'w').close()
+        except:
+            print('Direktorij ne postoji.')
 
 """ 
 #   pokusaj naredbi
