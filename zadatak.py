@@ -146,6 +146,7 @@ def ls(lista):
         for dat in sadrzaj:
             if not dat.name[0] == '.':
                 info = dat.stat()
+                #   (limitacija) ispis je uredan samo za datoteke duljine do 20 karaktera
                 print('{: <20}{: >10}{: >10}{: >10}{: >10}{: >10}'.format(dat.name, info.st_mode, info.st_nlink, info.st_uid, info.st_gid, info.st_size))
     #   izvrsava se ukoliko je zadana relativna adresa direktorija
     elif len(lista) == 2 and lista[1][0:2] == './':
