@@ -87,8 +87,18 @@ def kill(lista):
     if len(lista) == 1:
         print("Naredba prima tocno jedan parametar: naziv signala ili njegov redni broj.")
     else:
-        signal = int(lista[1].strip('-'))
-        os.kill(os.getpid(), signal)
+        parametar = lista[1]
+        if parametar == '-SIGINT' or parametar == '-INT' or parametar == '-2':
+            signal = 2
+        elif parametar == '-SIGQUIT' or parametar == '-QUIT' or parametar == '-3':
+            signal = 3
+        elif parametar == '-SIGTERM' or parametar == '-TERM' or parametar == '-15':
+            signal = 15
+        try:
+            os.kill(os.getpid(), signal)
+        except:
+            print('Naredba prima samo jedan parametar (id signala).')
+
 #   mjenja direktorij ovisno o koristenom parametru
 def cd(lista):
     #   izvrsava se ako nema parametara
@@ -213,7 +223,7 @@ lokot = threading.Lock()
 barijera = threading.Barrier(4)
 
 #   neki opis
-def oduzmi_kvad(pocetak, kraj):
+def oduzmi_kvad(id, pocetak, kraj):
     lokot.acquire()
     global broj
     medjuvrijed = open('/home/andrija/result.txt', 'a')
@@ -223,13 +233,14 @@ def oduzmi_kvad(pocetak, kraj):
         medjuvrijed.write('\n')
     medjuvrijed.close()
     lokot.release()
-    id_niti = barijera.wait()
-    if id_niti == 1:
-        print("Nit {} spava".format(id_niti))
+    if id == 2:
+        print("Nit {} spava".format(id))
         time.sleep(2)
-        print("Nit {} je zavrsila spavat.".format(id_niti))
-    print('Nit {} je zavrsila sa radom.'.format(id_niti))
-
+        print("Nit {} je zavrsila spavat.".format(id))
+    print('Nit {} je zavrsila sa radom.'.format(id))
+    barijera.wait()
+    if id == 2:
+        print('Sve niti su izvrsile rad.')
 
 #   neki opis
 def kvadrat(lista):
@@ -243,10 +254,11 @@ def kvadrat(lista):
     nit3.join()
     nit4.join()
 
-nit1 = threading.Thread(target=oduzmi_kvad, args=(1, 24000))
-nit2 = threading.Thread(target=oduzmi_kvad, args=(24000, 48000))
-nit3 = threading.Thread(target=oduzmi_kvad, args=(48000, 72000))
-nit4 = threading.Thread(target=oduzmi_kvad, args=(72000, 95960))
+
+nit1 = threading.Thread(target=oduzmi_kvad, args=(1, 1, 24000))
+nit2 = threading.Thread(target=oduzmi_kvad, args=(2, 24000, 48000))
+nit3 = threading.Thread(target=oduzmi_kvad, args=(3, 48000, 72000))
+nit4 = threading.Thread(target=oduzmi_kvad, args=(4, 72000, 95960))
 
 
 #   ________________________________________________________________________________
