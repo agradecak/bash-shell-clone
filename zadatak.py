@@ -209,8 +209,12 @@ def rm(lista):
 #   NITI
 
 broj = 33330330330320320320
+lokot = threading.Lock()
+barijera = threading.Barrier(4)
 
+#   neki opis
 def oduzmi_kvad(pocetak, kraj):
+    lokot.acquire()
     global broj
     medjuvrijed = open('/home/andrija/result.txt', 'a')
     for i in range(pocetak, kraj):
@@ -218,9 +222,18 @@ def oduzmi_kvad(pocetak, kraj):
         medjuvrijed.write(str(broj))
         medjuvrijed.write('\n')
     medjuvrijed.close()
+    lokot.release()
+    id_niti = barijera.wait()
+    if id_niti == 1:
+        print("Nit {} spava".format(id_niti))
+        time.sleep(2)
+        print("Nit {} je zavrsila spavat.".format(id_niti))
+    print('Nit {} je zavrsila sa radom.'.format(id_niti))
 
-#   
+
+#   neki opis
 def kvadrat(lista):
+    open('/home/andrija/result.txt', 'w').close()
     nit1.start()
     nit2.start()
     nit3.start()
