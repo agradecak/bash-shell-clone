@@ -4,6 +4,9 @@ import os
 import time
 import sys
 import signal
+import threading
+
+
 
 #   ________________________________________________________________________________
 #   SIGNALI
@@ -48,7 +51,7 @@ def izvrsi(naredba_lista):
     elif naredba_lista[0] == 'ls': ls(naredba_lista)
     elif naredba_lista[0] == 'touch': touch(naredba_lista)
     elif naredba_lista[0] == 'rm': rm(naredba_lista)
-    elif naredba_lista[0] == 'kvadrat': pass
+    elif naredba_lista[0] == 'kvadrat': kvadrat(naredba_lista)
     elif naredba_lista[0] == 'izlaz' or naredba_lista[0] == 'odjava':
         sys.exit()
     else:
@@ -202,26 +205,36 @@ def rm(lista):
     else:
         print('Datoteka ne postoji.')
 
-""" 
-#   pokusaj naredbi
+#   ________________________________________________________________________________
+#   NITI
 
+broj = 33330330330320320320
 
-def echo (unos):
-    if unos == 'echo':  # REG \echo$
-        print('Naredba prima barem jedan argument')
-    # regularni izraz ???
-    else unos == 'echo' # REG \echo\s([a-z]+\s)|\"([a-z]+\s)"
-        # ispis argumenta bez ""
-        # x=re.search([a-z]+\s)
-        print('x')
+def oduzmi_kvad(pocetak, kraj):
+    global broj
+    medjuvrijed = open('/home/andrija/result.txt', 'a')
+    for i in range(pocetak, kraj):
+        broj -= i*i
+        medjuvrijed.write(str(broj))
+        medjuvrijed.write('\n')
+    medjuvrijed.close()
 
-def kill (unos):
-    if unos == 'kill':  # REG \kill$
-        print('Naredba prima tocno jedan parametar: naziv signala ili njegov redni broj')
-    if else unos == 'echo -15': # \echo\s\-[0-9]{1,2}|[A-Z]{1,}
-        print('Pristigao je signal 15 . Program se zatvara') 
+#   
+def kvadrat(lista):
+    nit1.start()
+    nit2.start()
+    nit3.start()
+    nit4.start()
+    nit1.join()
+    nit2.join()
+    nit3.join()
+    nit4.join()
 
-"""
+nit1 = threading.Thread(target=oduzmi_kvad, args=(1, 24000))
+nit2 = threading.Thread(target=oduzmi_kvad, args=(24000, 48000))
+nit3 = threading.Thread(target=oduzmi_kvad, args=(48000, 72000))
+nit4 = threading.Thread(target=oduzmi_kvad, args=(72000, 95960))
+
 
 #   ________________________________________________________________________________
 #   MAIN
