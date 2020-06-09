@@ -7,6 +7,15 @@ import signal
 import threading
 
 
+#   ________________________________________________________________________________
+#   GLOBALNE VARIJABLE
+
+#   koristi se za dohvat home adrese u funkciji cd, i funkciji kvadrat za ispis datoteke
+kucni_dir = os.path.expanduser('~')
+
+#   vrijednost od koje se oduzimaju kvadrati u funkciji kvadrat
+broj = 33330330330320320320
+
 
 #   ________________________________________________________________________________
 #   SIGNALI
@@ -22,10 +31,11 @@ def upravljacTERM(broj_signala, stog):
     sys.exit()
     return
 
-#   signali koji su usmjereni na specijalno definirane upravljace
+#   signali koji su usmjereni na posebne upravljace
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 signal.signal(signal.SIGQUIT, upravljacQUIT)
 signal.signal(signal.SIGTERM, upravljacTERM)
+
 
 #   ________________________________________________________________________________
 #   DEFINICIJE
@@ -88,33 +98,38 @@ def kill(lista):
         print("Naredba prima tocno jedan parametar: naziv signala ili njegov redni broj.")
     else:
         parametar = lista[1]
+        #   postavljanje adekvatne vrijednosti signala na temelju korisnickog unosa/stringa
         if parametar == '-SIGINT' or parametar == '-INT' or parametar == '-2':
             signal = 2
         elif parametar == '-SIGQUIT' or parametar == '-QUIT' or parametar == '-3':
             signal = 3
         elif parametar == '-SIGTERM' or parametar == '-TERM' or parametar == '-15':
             signal = 15
+        else:
+            signal = int(parametar.strip('-'))
         try:
+            #   pokusaj egzekucije signala
             os.kill(os.getpid(), signal)
         except:
-            print('Naredba prima samo jedan parametar (id signala).')
+            #   inace, ispis pogreske
+            print('Pogreska. Naredba prima tocno jedan parametar, ID signala.')
 
 #   mjenja direktorij ovisno o koristenom parametru
 def cd(lista):
     #   izvrsava se ako nema parametara
     if len(lista) == 1:
-        os.chdir(os.path.expanduser('~'))
+        os.chdir(kucni_dir)
     #   izvrsava se ako ima jedan parametar
     elif len(lista) == 2:
-        #   radi se slice prva dva karaktera u parametru, za provjeru sta se koristi
+        #   radi se slice prva dva karaktera u parametru, za provjeru parametra
         param = lista[1][0:2]
         if param == '.':
             pass
         elif param == '..':
             roditelj = os.path.join(os.getcwd(), os.pardir)
             os.chdir(roditelj)
-        #   ako naredba ne uspjeva, ispisuje se obavijest o pogresci
         elif param == './':
+            #   ako je adresa nepostojeca, ispisuje se obavijest o pogresci
             try:
                 odrediste = lista[1].strip('./')
                 dublje = os.path.join(os.getcwd(), odrediste)
@@ -215,36 +230,37 @@ def rm(lista):
     else:
         print('Datoteka ne postoji.')
 
+
 #   ________________________________________________________________________________
 #   NITI
 
-broj = 33330330330320320320
+#   postavljanje lokota i barijere
 lokot = threading.Lock()
 barijera = threading.Barrier(4)
 
-#   neki opis
+#   funkcija koju pozivaju niti tokom izvrsavanja
 def oduzmi_kvad(id, pocetak, kraj):
+    #   postavlja se lokot za limitiranje pristupa varijabli 'broj'
     lokot.acquire()
     global broj
-    medjuvrijed = open('/home/andrija/result.txt', 'a')
+    medjuvrijed = open(kucni_dir + '/result.txt', 'a')
     for i in range(pocetak, kraj):
         broj -= i*i
         medjuvrijed.write(str(broj))
         medjuvrijed.write('\n')
     medjuvrijed.close()
+    #   lokot se otpusta nakon izvrsavanja izracuna
     lokot.release()
     if id == 2:
-        print("Nit {} spava".format(id))
         time.sleep(2)
-        print("Nit {} je zavrsila spavat.".format(id))
-    print('Nit {} je zavrsila sa radom.'.format(id))
+    #   nit ide na cekanje drugih nakon svog izvrsavanja
     barijera.wait()
     if id == 2:
         print('Sve niti su izvrsile rad.')
 
-#   neki opis
+#   funkcija koja pokrece niti i instancira datoteku result.txt u kucnom direktoriju
 def kvadrat(lista):
-    open('/home/andrija/result.txt', 'w').close()
+    open(kucni_dir + '/result.txt', 'w').close()
     nit1.start()
     nit2.start()
     nit3.start()
@@ -254,7 +270,8 @@ def kvadrat(lista):
     nit3.join()
     nit4.join()
 
-
+#   cetiri niti koje dijele resurs broj i izvrsavaju zadacu oduzimanja kvadrata
+#   zadacu kvadriranja brojeva od 1 do 95959 dijele proslijedjujuci svoj pocetak i kraj u funkciju
 nit1 = threading.Thread(target=oduzmi_kvad, args=(1, 1, 24000))
 nit2 = threading.Thread(target=oduzmi_kvad, args=(2, 24000, 48000))
 nit3 = threading.Thread(target=oduzmi_kvad, args=(3, 48000, 72000))
@@ -270,11 +287,10 @@ print('Pozdrav! ({})'.format(vrijeme))
 
 #   glavna petlja
 while (True):
-    unos = ''
     ispisi_odziv()
     unos = input()
     unos_split = unos.split()
-    #   ako je lista prazna, nastavi (kako se ne bi pristupalo indeksima kojih nema)
+    #   ako je lista prazna, preskoci egzekuciju (kako se ne bi pristupalo indeksima kojih nema)
     if not unos_split:
         continue
     #   ako lista nije prazna, provjeri postoji li definicija i izvrsi naredbu
