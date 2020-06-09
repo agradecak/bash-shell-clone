@@ -16,6 +16,12 @@ kucni_dir = os.path.expanduser('~')
 #   vrijednost od koje se oduzimaju kvadrati u funkciji kvadrat
 broj = 33330330330320320320
 
+#   pohranjuje trenutno vrijeme (vec formatirani oblik)
+vrijeme = time.ctime()
+
+#   instanciranje liste koja pamti sve naredbe u sesiji
+povijest = []
+
 
 #   ________________________________________________________________________________
 #   SIGNALI
@@ -63,6 +69,12 @@ def izvrsi(naredba_lista):
     elif naredba_lista[0] == 'rm': rm(naredba_lista)
     elif naredba_lista[0] == 'kvadrat': kvadrat(naredba_lista)
     elif naredba_lista[0] == 'izlaz' or naredba_lista[0] == 'odjava':
+        #   ispisuje sadrzaj liste povijest u datoteku .hist prije izlaza iz sesije
+        povijest_ispis = open(kucni_dir + '/.hist', 'w')
+        for stavka in povijest:
+            povijest_ispis.write(stavka)
+            povijest_ispis.write('\n')
+        povijest_ispis.close()
         sys.exit()
     else:
         print('Neprepoznata naredba.')
@@ -282,7 +294,6 @@ nit4 = threading.Thread(target=oduzmi_kvad, args=(4, 72000, 95960))
 #   MAIN
 
 #   ispis pozdravne poruke i trenutnog vremena
-vrijeme = time.ctime()
 print('Pozdrav! ({})'.format(vrijeme))
 
 #   glavna petlja
@@ -293,6 +304,7 @@ while (True):
     #   ako je lista prazna, preskoci egzekuciju (kako se ne bi pristupalo indeksima kojih nema)
     if not unos_split:
         continue
-    #   ako lista nije prazna, provjeri postoji li definicija i izvrsi naredbu
+    #   ako lista nije prazna, dodaj u .hist, provjeri postoji li definicija i izvrsi naredbu
     else:
+        povijest.append(unos)
         izvrsi(unos_split)
