@@ -1,2 +1,2 @@
-# Projektni zadatak, operacijski sustavi - bash shell klon
+# Bash shell klon
 Aplikacija imitira rad bash shella na manjem skupu naredbi poput ls, ps, kill, cd, date, pwd... 
